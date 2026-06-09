@@ -1,0 +1,9 @@
+@use "../../index.scss" as *;
+
+input {
+	outline: none;
+
+	border: 1px solid $border;
+	background-color: transparent;
+	color: $textPrimary;
+}
