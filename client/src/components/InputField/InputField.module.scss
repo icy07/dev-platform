@@ -1,9 +1,13 @@
-@use "../../index.scss" as *;
+@use "../../styles/variables" as *;
 
 input {
+	width: 100%;
 	outline: none;
 
 	border: 1px solid $border;
 	background-color: transparent;
 	color: $textPrimary;
+
+	padding: 8px 12px;
+	border-radius: 6px;
 }

@@ -1,6 +1,9 @@
 @use "./styles/variables" as *;
+@use "./styles/reset" as *;
 
 body {
+	font-family: "Arial";
+
 	background-color: $bgColor;
 	color: $textPrimary;
 }
