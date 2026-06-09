@@ -23,7 +23,7 @@ const AuthForm = () => {
 				)}
 			</div>
 
-			<button onClick={toggleMode}>
+			<button className={`${styles.form__switcher} btn`} onClick={toggleMode}>
 				{mode === "login" ? "Нет аккаунта? Зарегистрируйтесь" : "Есть аккаунт? Войдите"}
 			</button>
 		</div>
