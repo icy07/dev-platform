@@ -53,7 +53,6 @@ const RegisterForm = ({ styles, onSwitch }: RegisterFormProps) => {
 
 		try {
 			const data = await registerRequest(registerData);
-			console.log(data);
 
 			setServerMessage("Регистрация прошла успешно");
 			setResult("success");
