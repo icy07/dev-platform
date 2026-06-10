@@ -1,6 +1,25 @@
 @use "./styles/variables" as *;
+@use "./styles/reset" as *;
 
 body {
+	font-family: "Arial";
+
 	background-color: $bgColor;
 	color: $textPrimary;
+}
+
+.btn {
+	background-color: $primaryColor;
+	border-radius: 6px;
+	padding: 12px 16px;
+
+	font-weight: 600;
+
+	transition: 0.2s;
+
+	@media (any-hover: hover) {
+		&:hover {
+			background-color: $primaryHover;
+		}
+	}
 }

@@ -4,11 +4,12 @@ import "./index.scss";
 import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
+import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<Provider store={store}>
-			<App />
+			<AuthPage />
 		</Provider>
 	</StrictMode>,
 );
