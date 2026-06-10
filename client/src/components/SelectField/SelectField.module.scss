@@ -1,0 +1,95 @@
+@use "../../styles/variables" as *;
+
+.selector {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	&__title {
+		font-size: 14px;
+		margin: 0px 0px 10px 0px;
+
+		span {
+			color: $error;
+		}
+	}
+
+	&__trigger {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 12px 16px;
+		border: 1px solid $border;
+		border-radius: 8px;
+		cursor: pointer;
+		background-color: $surface;
+		user-select: none;
+
+		&._error {
+			border-color: $error;
+
+			span {
+				color: $error;
+			}
+		}
+	}
+
+	&__placeholder {
+		color: $textSecondary;
+	}
+
+	&__arrow {
+		transition: transform 0.2s ease;
+		flex-shrink: 0;
+
+		&_open {
+			transform: rotate(180deg);
+		}
+	}
+
+	&__dropdown {
+		position: absolute;
+		top: calc(100% + 4px);
+		left: 0;
+		right: 0;
+		background-color: $surface;
+		border: 1px solid $border;
+		border-radius: 8px;
+		overflow: hidden;
+		list-style: none;
+		padding: 4px;
+		margin: 0;
+		z-index: 10;
+	}
+
+	&__option {
+		padding: 10px 12px;
+		font-size: 14px;
+		cursor: pointer;
+		border-radius: 6px;
+		transition: background-color 0.15s ease;
+
+		&:not(:last-child) {
+			margin-bottom: 5px;
+		}
+
+		&:hover {
+			background-color: $primaryColor;
+			color: $textPrimary;
+		}
+
+		&_active {
+			background-color: $primaryColor;
+			color: $textPrimary;
+		}
+	}
+
+	&__error {
+		position: absolute;
+		font-size: 14px;
+		top: 0;
+		right: 0;
+		color: $error;
+	}
+}

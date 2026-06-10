@@ -4,6 +4,7 @@ import type { LoginData } from "../../../../types";
 import { validateLogin, type LoginErrors } from "./validation";
 import { loginRequest } from "../../../../api/authApi";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+// import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
 	styles: CSSModuleClasses;
@@ -15,7 +16,9 @@ const LoginForm = ({ styles, onSwitch }: LoginFormProps) => {
 	const [errors, setErrors] = useState<LoginErrors>({});
 	const [serverError, setServerError] = useState("");
 
-	const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	// const navigate = useNavigate();
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 
 		setLoginData({ ...loginData, [name]: value });
@@ -37,6 +40,7 @@ const LoginForm = ({ styles, onSwitch }: LoginFormProps) => {
 		try {
 			const data = await loginRequest(loginData);
 			console.log(data);
+			// navigate("/");
 		} catch (error: any) {
 			const message = error.response?.data?.message || "Ошибка сервера";
 			setServerError(message);
@@ -65,7 +69,7 @@ const LoginForm = ({ styles, onSwitch }: LoginFormProps) => {
 					error={errors.password}
 				/>
 			</div>
-			{serverError && <ErrorMessage msg={serverError} />}
+			{serverError && <ErrorMessage msg={serverError} result="error" />}
 
 			<button className={`${styles.form__button} btn`} onClick={handleSubmit}>
 				Войти
