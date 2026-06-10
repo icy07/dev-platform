@@ -1,9 +1,9 @@
-import "./AuthPage.module.scss";
+import styles from "./AuthPage.module.scss";
 import AuthForm from "./components/AuthForm/AuthForm";
 
 const AuthPage = () => {
 	return (
-		<div>
+		<div className={styles.container}>
 			<AuthForm />
 		</div>
 	);

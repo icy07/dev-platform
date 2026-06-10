@@ -15,7 +15,7 @@ export interface IUser {
 
 export interface RegisterData {
 	firstName: string;
-	lastname: string;
+	lastName: string;
 	nickname: string;
 	email: string;
 	password: string;
