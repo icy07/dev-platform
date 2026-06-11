@@ -5,6 +5,9 @@ import { validateLogin, type LoginErrors } from "./validation";
 import { loginRequest } from "../../../../api/authApi";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../store/slices/authSlice";
+import type { AppDispatch } from "../../../../store/store";
 
 interface LoginFormProps {
 	styles: CSSModuleClasses;
@@ -17,6 +20,7 @@ const LoginForm = ({ styles, onSwitch, setLoading }: LoginFormProps) => {
 	const [errors, setErrors] = useState<LoginErrors>({});
 	const [serverError, setServerError] = useState("");
 
+	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +45,7 @@ const LoginForm = ({ styles, onSwitch, setLoading }: LoginFormProps) => {
 
 		try {
 			const data = await loginRequest(loginData);
+			dispatch(setUser(data.data));
 			setLoading(false);
 			navigate("/");
 		} catch (error: any) {

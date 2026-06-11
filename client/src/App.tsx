@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
-import { checkAuthRequest, logoutRequest } from "./api/authApi";
+import { checkAuthRequest } from "./api/authApi";
 import { useNavigate } from "react-router-dom";
 import Loader from "./components/Loader/Loader";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "./store/store";
+import { setUser } from "./store/slices/authSlice";
+import Header from "./components/Header/Header";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const App = () => {
 	const navigate = useNavigate();
-	const [laoding, setLaoding] = useState<boolean>(false);
+	const [laoding, setLoading] = useState<boolean>(false);
+
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		const checkAuth = async () => {
-			setLaoding(true);
+			setLoading(true);
 
 			try {
-				await checkAuthRequest();
-				setLaoding(false);
+				const data = await checkAuthRequest();
+				dispatch(setUser(data.data));
+				setLoading(false);
 			} catch (error) {
-				setLaoding(false);
+				setLoading(false);
 				navigate("/auth");
 			}
 		};
@@ -23,22 +31,13 @@ const App = () => {
 		checkAuth();
 	}, [navigate]);
 
-	const handleLogOut = async () => {
-		try {
-			await logoutRequest();
-			navigate("/auth");
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
 	return (
 		<>
 			{laoding && <Loader />}
-			<div>
-				App
-				<button onClick={handleLogOut}>Log out</button>
-			</div>
+			<Header />
+			<main>
+				<Dashboard />
+			</main>
 		</>
 	);
 };
