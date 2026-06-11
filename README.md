@@ -25,10 +25,19 @@
 - **Manager** — дополнительно: управление командами и проектами
 
 <img width="642" height="875" alt="image" src="https://github.com/user-attachments/assets/cf39ba3e-f3b4-4dcf-988c-ff58424f5781" />
-<img width="580" height="454" alt="image" src="https://github.com/user-attachments/assets/5cdf535d-2eec-45d2-a2bc-fbe2fc7cd719" />
-<img width="572" height="502" alt="image" src="https://github.com/user-attachments/assets/3c687395-461d-4d6a-a1fa-6a7588d39670" />
-<img width="471" height="424" alt="image" src="https://github.com/user-attachments/assets/496f0e52-8b81-45d0-b46f-8a8ce9183079" />
+<p>Страница авторизации — форма регистрации</p>
 
+<br>
+<img width="580" height="454" alt="image" src="https://github.com/user-attachments/assets/5cdf535d-2eec-45d2-a2bc-fbe2fc7cd719" />
+<p>Страница авторизации — форма входа</p>
+
+<br>
+<img width="572" height="502" alt="image" src="https://github.com/user-attachments/assets/3c687395-461d-4d6a-a1fa-6a7588d39670" />
+<p>Дашборд — роль HR</p>
+
+<br>
+<img width="471" height="424" alt="image" src="https://github.com/user-attachments/assets/496f0e52-8b81-45d0-b46f-8a8ce9183079" />
+<p>Дашборд — роль Manager</p>
 
 ## Запуск локально
 
@@ -72,10 +81,10 @@ dev-platform/
 │   └── src/
 │       ├── api/             # axios-запросы к серверу
 │       ├── components/      # переиспользуемые компоненты
-│       ├── pages/           # страницы приложения
+│       ├── pages/           # страницы приложения (AuthPage, NotFound)
 │       ├── store/           # Redux стор и слайсы
-│       ├── types/           # TypeScript типы
-│       └── utils/           # утилиты (permissions и др.)
+│       ├── types.ts         # TypeScript типы
+│       └── utils/           # утилиты (permissions)
 └── server/                  # Express-сервер
     └── src/
         ├── controllers/     # логика эндпоинтов
