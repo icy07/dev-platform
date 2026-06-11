@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 interface LoginFormProps {
 	styles: CSSModuleClasses;
 	onSwitch: () => void;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LoginForm = ({ styles, onSwitch }: LoginFormProps) => {
+const LoginForm = ({ styles, onSwitch, setLoading }: LoginFormProps) => {
 	const [loginData, setLoginData] = useState<LoginData>({ nickname: "", password: "" });
 	const [errors, setErrors] = useState<LoginErrors>({});
 	const [serverError, setServerError] = useState("");
@@ -36,13 +37,16 @@ const LoginForm = ({ styles, onSwitch }: LoginFormProps) => {
 			setErrors(validatedErrors);
 			return;
 		}
+		setLoading(true);
 
 		try {
 			const data = await loginRequest(loginData);
+			setLoading(false);
 			navigate("/");
 		} catch (error: any) {
 			const message = error.response?.data?.message || "Ошибка сервера";
 			setServerError(message);
+			setLoading(false);
 		}
 	};
 

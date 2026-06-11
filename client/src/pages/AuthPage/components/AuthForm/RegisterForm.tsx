@@ -10,9 +10,10 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 interface RegisterFormProps {
 	styles: CSSModuleClasses;
 	onSwitch: () => void;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const RegisterForm = ({ styles, onSwitch }: RegisterFormProps) => {
+const RegisterForm = ({ styles, onSwitch, setLoading }: RegisterFormProps) => {
 	const [registerData, setRegisterData] = useState<RegisterData>({
 		firstName: "",
 		lastName: "",
@@ -51,6 +52,8 @@ const RegisterForm = ({ styles, onSwitch }: RegisterFormProps) => {
 			return;
 		}
 
+		setLoading(true);
+
 		try {
 			const data = await registerRequest(registerData);
 
@@ -66,10 +69,12 @@ const RegisterForm = ({ styles, onSwitch }: RegisterFormProps) => {
 				confirmPassword: "",
 				role: "",
 			});
+			setLoading(false);
 		} catch (error: any) {
 			const message = error.response?.data?.message || "Ошибка сервера";
 			setServerMessage(message);
 			setResult("error");
+			setLoading(false);
 		}
 	};
 

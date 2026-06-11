@@ -1,15 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { checkAuthRequest, logoutRequest } from "./api/authApi";
 import { useNavigate } from "react-router-dom";
+import Loader from "./components/Loader/Loader";
 
 const App = () => {
 	const navigate = useNavigate();
+	const [laoding, setLaoding] = useState<boolean>(false);
 
 	useEffect(() => {
 		const checkAuth = async () => {
+			setLaoding(true);
+
 			try {
 				await checkAuthRequest();
+				setLaoding(false);
 			} catch (error) {
+				setLaoding(false);
 				navigate("/auth");
 			}
 		};
@@ -27,10 +33,13 @@ const App = () => {
 	};
 
 	return (
-		<div>
-			App
-			<button onClick={handleLogOut}>Log out</button>
-		</div>
+		<>
+			{laoding && <Loader />}
+			<div>
+				App
+				<button onClick={handleLogOut}>Log out</button>
+			</div>
+		</>
 	);
 };
 export default App;
