@@ -60,8 +60,8 @@ export const editPost = async (req: AuthRequest, res: Response) => {
 
 		const { title, content, type, direction, previewImage } = req.body;
 
-		post.title = title;
-		post.content = content;
+		post.title = title?.trim();
+		post.content = content?.trim();
 		post.type = type;
 		post.direction = direction;
 		if (previewImage !== undefined) post.previewImage = previewImage;
@@ -76,22 +76,78 @@ export const editPost = async (req: AuthRequest, res: Response) => {
 export const deletePost = async (req: AuthRequest, res: Response) => {
 	try {
 		const userId = req.user?.id;
-		const id = String(req.params.id);
+		const { id } = req.params;
 
 		if (!userId) return res.status(401).json({ message: "Нет доступа" });
 
-		if (!mongoose.Types.ObjectId.isValid(id))
-			return res.status(400).json({ message: "Некорректный id поста" });
+		const post = await Post.findById(id);
+		if (!post) return res.status(404).json({ message: "Пост не найден" });
 
-		const deletedPost = await Post.findOneAndDelete({ _id: id, author: userId });
+		const isAuthor = post.author?.toString() === userId;
+		if (!isAuthor) return res.status(403).json({ message: "Нет прав на удаление" });
 
-		if (!deletedPost)
-			return res
-				.status(404)
-				.json({ message: "Пост не найден или у вас нет прав на его удаление" });
+		await post.deleteOne();
 
-		res.status(200).json({ message: "Пост удален", post: deletedPost });
+		res.status(200).json({ message: "Пост удален" });
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка при удалении поста" });
+	}
+};
+
+export const likePost = async (req: AuthRequest, res: Response) => {
+	try {
+		const userId = req.user?.id;
+		const { id } = req.params;
+
+		if (!userId) return res.status(401).json({ message: "Нет доступа" });
+
+		const updatedPost = await Post.findOneAndUpdate(
+			{
+				_id: id,
+				likedBy: { $ne: new mongoose.Types.ObjectId(userId) },
+			},
+			{
+				$addToSet: { likedBy: new mongoose.Types.ObjectId(userId) },
+				$inc: { likes: 1 },
+			},
+			{ returnDocument: "after" },
+		);
+
+		if (!updatedPost) {
+			return res.status(400).json({ message: "Пользователь уже лайкнул этот пост" });
+		}
+
+		return res.json({ message: "Пост лайкнут", post: updatedPost });
+	} catch {
+		return res.status(500).json({ message: "Ошибка при лайке поста" });
+	}
+};
+
+export const unlikePost = async (req: AuthRequest, res: Response) => {
+	try {
+		const userId = req.user?.id;
+		const { id } = req.params;
+
+		if (!userId) return res.status(401).json({ message: "Нет доступа" });
+
+		const updatedPost = await Post.findOneAndUpdate(
+			{
+				_id: id,
+				likedBy: new mongoose.Types.ObjectId(userId),
+			},
+			{
+				$pull: { likedBy: new mongoose.Types.ObjectId(userId) },
+				$inc: { likes: -1 },
+			},
+			{ returnDocument: "after" },
+		);
+
+		if (!updatedPost) {
+			return res.status(400).json({ message: "Пользователь не лайкал этот пост" });
+		}
+
+		return res.json({ message: "Лайк убран", post: updatedPost });
+	} catch {
+		return res.status(500).json({ message: "Ошибка при удалении лайка с поста" });
 	}
 };
