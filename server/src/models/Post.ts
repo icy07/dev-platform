@@ -1,6 +1,5 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
 import { IUser, UserRole } from "./User";
-import { Request } from "express";
 
 export type PostCategory = "Контент" | "Событие" | "Вакансия";
 
@@ -14,14 +13,6 @@ export interface IPost extends Document {
 	likedBy?: PopulatedDoc<IUser & Document>[];
 	previewImage?: string;
 }
-
-export type AuthRequest = Request & {
-	user?: {
-		id: string;
-		nickname: string;
-		role: UserRole;
-	};
-};
 
 const PostSchema = new mongoose.Schema<IPost>(
 	{

@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
-import { AuthRequest } from "../models/Post";
 import { UserRole } from "../models/User";
+import { AuthRequest } from "../types/AuthRequest";
 
 type jwtUser = {
 	id: string;
