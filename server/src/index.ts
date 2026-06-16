@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "./routes/auth";
+import postRoutes from "./routes/posts";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(
 );
 
 app.use("/api", authRoutes);
+app.use("/api", postRoutes);
 
 mongoose
 	.connect(process.env.MONGODB_URI!)
