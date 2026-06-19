@@ -27,3 +27,19 @@ export interface LoginData {
 	nickname: string;
 	password: string;
 }
+
+//! POST TYPES ======================================================================================================
+
+export type PostType = "Контент" | "Событие" | "Вакансия";
+
+export interface Post {
+	id: string;
+	title: string;
+	content: string;
+	author: { _id: string; nickname: string; role: UserRole };
+	type: PostType;
+	direction: UserRole;
+	likes: number;
+	isLikedByUser: boolean;
+	previewImage?: string;
+}
