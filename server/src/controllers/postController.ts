@@ -4,8 +4,9 @@ import Post, { IPost, PostCategory } from "../models/Post";
 import { UserRole } from "../models/User";
 import { AuthRequest } from "../types/AuthRequest";
 
-export const getPosts = async (req: Request, res: Response) => {
+export const getPosts = async (req: AuthRequest, res: Response) => {
 	try {
+		const userId = req.user?.id;
 		const { type, direction } = req.query;
 
 		const filter: QueryFilter<IPost> = {};
@@ -16,7 +17,17 @@ export const getPosts = async (req: Request, res: Response) => {
 			.populate("author", "nickname role")
 			.sort({ createdAt: -1 });
 
-		res.json(posts);
+		const postsWithLikes = posts.map((post) => {
+			const { likedBy, ...postData } = post.toObject();
+			return {
+				...postData,
+				isLikedByUser: userId
+					? (likedBy?.some((id) => id?.toString() === userId) ?? false)
+					: false,
+			};
+		});
+
+		res.json(postsWithLikes);
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка при получении постов" });
 	}
@@ -31,8 +42,8 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 		const { title, content, type, direction, previewImage } = req.body;
 
 		const post = await Post.create({
-			title,
-			content,
+			title: title?.trim(),
+			content: content?.trim(),
 			author: new mongoose.Types.ObjectId(userId),
 			type,
 			direction,
