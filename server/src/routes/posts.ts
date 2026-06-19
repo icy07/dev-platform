@@ -12,7 +12,7 @@ import upload from "../middleware/upload";
 
 const router = express.Router();
 
-router.get("/posts", getPosts);
+router.get("/posts", requireAuth, getPosts);
 router.post("/posts", requireAuth, createPost);
 router.put("/posts/:id", requireAuth, editPost);
 router.delete("/posts/:id", requireAuth, deletePost);
