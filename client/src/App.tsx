@@ -36,7 +36,7 @@ const App = () => {
 		<>
 			{laoding && <Loader />}
 			<Header />
-			<main>
+			<main className="main">
 				<Dashboard />
 				<PostsMain />
 			</main>

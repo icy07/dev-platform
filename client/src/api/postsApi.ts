@@ -6,9 +6,8 @@ const api = axios.create({
 	withCredentials: true,
 });
 
-export const getPostsRequest = (filters?: { type?: string; direction?: UserRole }) => {
+export const getPostsRequest = (filters?: { type?: string; direction?: UserRole }) =>
 	api.get("/posts", { params: filters });
-};
 
 export const createPostRequest = (data: FormData) => api.post("/posts", data);
 

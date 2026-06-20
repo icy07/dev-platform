@@ -1,0 +1,190 @@
+@use "../../styles/variables" as *;
+
+.card {
+	min-width: 300px;
+
+	background-color: $surface;
+	border: 0.5px solid $border;
+	border-radius: 12px;
+	overflow: hidden;
+
+	&__image {
+		background-color: $border;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		width: 100%;
+		height: 180px;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		&.card__imgPlaceholder {
+			img {
+				object-fit: contain;
+				height: 40px;
+			}
+		}
+	}
+
+	&__body {
+		padding: 16px 20px 12px;
+	}
+
+	&__meta {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	&__badge {
+		font-size: 11px;
+		padding: 3px 8px;
+		border-radius: 6px;
+		font-weight: 500;
+
+		&_type {
+			background-color: rgba(139, 92, 246, 0.12);
+			color: $primaryColor;
+			border: 0.5px solid rgba(139, 92, 246, 0.25);
+		}
+
+		&_dir {
+			background-color: $border;
+			color: $textSecondary;
+			border: 0.5px solid $border;
+		}
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: 500;
+		color: $textPrimary;
+		margin-bottom: 8px;
+		line-height: 1.4;
+	}
+
+	&__author {
+		font-size: 12px;
+		color: $textSecondary;
+		margin-bottom: 10px;
+
+		span {
+			color: $primaryColor;
+			cursor: pointer;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__contentWrapper {
+		overflow: hidden;
+		transition: max-height 0.3s;
+
+		&.card__contentWrapper_notExpanded {
+			-webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+			mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+		}
+	}
+
+	&__content {
+		font-size: 13px;
+		color: $textSecondary;
+		line-height: 1.6;
+		margin-bottom: 10px;
+	}
+
+	&__expand {
+		margin: 10px 0px 0px 0px;
+
+		background: none;
+		border: none;
+		color: $primaryColor;
+		font-size: 12px;
+		cursor: pointer;
+		padding: 0;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 20px;
+		border-top: 0.5px solid $border;
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__like {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		background: none;
+		border: none;
+		color: $textSecondary;
+		font-size: 13px;
+		cursor: pointer;
+		padding: 6px 10px;
+		border-radius: 8px;
+		transition:
+			background-color 0.12s,
+			color 0.12s;
+
+		&:hover {
+			background-color: rgba(139, 92, 246, 0.12);
+			color: $primaryColor;
+		}
+
+		&_active {
+			color: $primaryColor;
+		}
+	}
+
+	&__ownerActions {
+		display: flex;
+		gap: 4px;
+	}
+
+	&__btn {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background: none;
+		border: none;
+		color: $textSecondary;
+		font-size: 13px;
+		cursor: pointer;
+		padding: 6px 8px;
+		border-radius: 8px;
+		transition:
+			background-color 0.12s,
+			color 0.12s;
+
+		&:hover {
+			background-color: $border;
+			color: $textPrimary;
+		}
+
+		&_delete {
+			&:hover {
+				background-color: rgba(239, 68, 68, 0.12);
+				color: $error;
+			}
+		}
+	}
+}
