@@ -33,7 +33,7 @@ export interface LoginData {
 export type PostType = "Контент" | "Событие" | "Вакансия";
 
 export interface Post {
-	id: string;
+	_id: string;
 	title: string;
 	content: string;
 	author: { _id: string; nickname: string; role: UserRole };
@@ -42,4 +42,5 @@ export interface Post {
 	likes: number;
 	isLikedByUser: boolean;
 	previewImage?: string;
+	createdAt: string;
 }

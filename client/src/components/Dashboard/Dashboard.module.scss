@@ -1,7 +1,8 @@
 @use "../../styles/variables" as *;
 
 .dashboard {
-	padding: 28px 24px;
+	min-width: 300px;
+	padding: 28px 0px 28px 24px;
 
 	&__title {
 		font-size: 16px;

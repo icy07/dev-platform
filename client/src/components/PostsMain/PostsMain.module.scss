@@ -1,0 +1,10 @@
+@use "../../styles/variables" as *;
+
+.wrapper {
+	padding: 28px 24px 28px 0px;
+
+	display: grid;
+	align-items: start;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+}
