@@ -7,6 +7,7 @@ import type { AppDispatch } from "./store/store";
 import { setUser } from "./store/slices/authSlice";
 import Header from "./components/Header/Header";
 import Dashboard from "./components/Dashboard/Dashboard";
+import PostsMain from "./components/PostsMain/PostsMain";
 
 const App = () => {
 	const navigate = useNavigate();
@@ -37,6 +38,7 @@ const App = () => {
 			<Header />
 			<main>
 				<Dashboard />
+				<PostsMain />
 			</main>
 		</>
 	);
