@@ -32,14 +32,14 @@ const postsSlice = createSlice({
 			state.posts.unshift(action.payload);
 		},
 		updatePost: (state, action: PayloadAction<Post>) => {
-			const index = state.posts.findIndex((p) => p.id === action.payload.id);
+			const index = state.posts.findIndex((p) => p._id === action.payload._id);
 			if (index !== -1) state.posts[index] = action.payload;
 		},
 		removePost: (state, action: PayloadAction<string>) => {
-			state.posts = state.posts.filter((p) => p.id !== action.payload);
+			state.posts = state.posts.filter((p) => p._id !== action.payload);
 		},
 		toggleLike: (state, action: PayloadAction<string>) => {
-			const post = state.posts.find((p) => p.id === action.payload);
+			const post = state.posts.find((p) => p._id === action.payload);
 			if (!post) return;
 
 			if (post.isLikedByUser) {
