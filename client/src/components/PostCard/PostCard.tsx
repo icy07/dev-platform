@@ -2,8 +2,10 @@ import styles from "./PostCard.module.scss";
 import placeholderImg from "../../assets/placeholder.svg";
 import { useEffect, useRef, useState } from "react";
 import type { Post } from "../../types";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { toggleLike } from "../../store/slices/postsSlice";
+import { likePostRequest, unlikePostRequest } from "../../api/postsApi";
 
 const PREVIEW_LENGTH = 500;
 
@@ -20,6 +22,8 @@ const PostCard = ({ post }: PostProps) => {
 
 	const contentRef = useRef<HTMLParagraphElement>(null);
 	const { user } = useSelector((state: RootState) => state.auth);
+
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		if (contentRef.current) {
@@ -41,6 +45,16 @@ const PostCard = ({ post }: PostProps) => {
 			month: "long",
 			year: "numeric",
 		});
+	};
+
+	const handleLike = () => {
+		if (post.isLikedByUser) {
+			unlikePostRequest(post._id);
+		} else {
+			likePostRequest(post._id);
+		}
+
+		dispatch(toggleLike(post._id));
 	};
 
 	return (
@@ -90,6 +104,7 @@ const PostCard = ({ post }: PostProps) => {
 				<div className={styles.card__actions}>
 					<button
 						className={`${styles.card__like} ${post.isLikedByUser ? styles.card__like_active : ""}`}
+						onClick={handleLike}
 					>
 						<svg
 							width="16"
