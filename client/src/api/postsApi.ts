@@ -1,17 +1,23 @@
 import axios from "axios";
 import type { UserRole } from "../types";
+import type { PostFormData } from "../components/PostForm/PostForm";
 
 const api = axios.create({
-	baseURL: "http://localhost:5000/api",
+	baseURL: `${import.meta.env.VITE_API_URL}/api`,
 	withCredentials: true,
 });
 
 export const getPostsRequest = (filters?: { type?: string; direction?: UserRole }) =>
 	api.get("/posts", { params: filters });
 
-export const createPostRequest = (data: FormData) => api.post("/posts", data);
+export const createPostRequest = (
+	data: Omit<PostFormData, "previewImage"> & { previewImage?: string },
+) => api.post("/posts", data);
 
-export const updatePostRequest = (id: string, data: FormData) => api.put(`/posts/${id}`, data);
+export const updatePostRequest = (
+	id: string,
+	data: Omit<PostFormData, "previewImage"> & { previewImage?: string },
+) => api.put(`/posts/${id}`, data);
 
 export const deletePostRequest = (id: string) => api.delete(`/posts/${id}`);
 

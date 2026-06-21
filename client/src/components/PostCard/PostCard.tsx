@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import type { Post } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import { toggleLike } from "../../store/slices/postsSlice";
+import { openModal, toggleLike } from "../../store/slices/postsSlice";
 import { likePostRequest, unlikePostRequest } from "../../api/postsApi";
+import ReactMarkdown from "react-markdown";
+import { getImageUrl } from "../../utils/getImgUrl";
 
 const PREVIEW_LENGTH = 500;
 
@@ -59,8 +61,13 @@ const PostCard = ({ post }: PostProps) => {
 
 	return (
 		<div className={styles.card}>
-			<div className={`${styles.card__image} ${styles.card__imgPlaceholder}`}>
-				<img src={placeholderImg} alt="превью" />
+			<div
+				className={`${styles.card__image} ${post.previewImage ? "" : styles.card__imgPlaceholder}`}
+			>
+				<img
+					src={post.previewImage ? getImageUrl(post.previewImage) : placeholderImg}
+					alt="превью"
+				/>
 			</div>
 
 			<div className={styles.card__body}>
@@ -85,9 +92,9 @@ const PostCard = ({ post }: PostProps) => {
 						maxHeight: isExpanded ? `${contentHeight}px` : "100px",
 					}}
 				>
-					<p className={styles.card__content} ref={contentRef}>
-						{post.content}
-					</p>
+					<div className={styles.card__content} ref={contentRef}>
+						<ReactMarkdown>{post.content}</ReactMarkdown>
+					</div>
 				</div>
 
 				{isLong && (
@@ -123,7 +130,7 @@ const PostCard = ({ post }: PostProps) => {
 
 				{isAuthor && (
 					<div className={styles.card__ownerActions}>
-						<button className={styles.card__btn}>
+						<button className={styles.card__btn} onClick={() => dispatch(openModal(post))}>
 							<svg
 								width="15"
 								height="15"

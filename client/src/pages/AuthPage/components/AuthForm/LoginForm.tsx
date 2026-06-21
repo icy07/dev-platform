@@ -23,7 +23,7 @@ const LoginForm = ({ styles, onSwitch, setLoading }: LoginFormProps) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 
 		setLoginData({ ...loginData, [name]: value });
