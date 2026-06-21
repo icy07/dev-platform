@@ -1,23 +1,23 @@
 import styles from "./SelectField.module.scss";
-import type { UserRole } from "../../types";
 import { useEffect, useRef, useState } from "react";
 
-const ROLES: UserRole[] = [
-	"Frontend Developer",
-	"Backend Developer",
-	"QA Engineer",
-	"Designer",
-	"Manager",
-	"HR",
-];
-
-interface RoleSelectorProps {
-	value: UserRole | "";
-	onChange: (role: UserRole) => void;
+interface SelectFieldProps<T extends string> {
+	value: T | "";
+	onChange: (value: T) => void;
+	options: T[];
+	label: string;
+	placeholder?: string;
 	error?: string;
 }
 
-const SelectField = ({ value, onChange, error }: RoleSelectorProps) => {
+const SelectField = <T extends string>({
+	value,
+	onChange,
+	options,
+	label,
+	placeholder = "Выберите...",
+	error,
+}: SelectFieldProps<T>) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -31,15 +31,15 @@ const SelectField = ({ value, onChange, error }: RoleSelectorProps) => {
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	const handleSelect = (role: UserRole) => {
-		onChange(role);
+	const handleSelect = (option: T) => {
+		onChange(option);
 		setIsOpen(false);
 	};
 
 	return (
 		<div className={styles.selector} ref={ref}>
 			<p className={styles.selector__title}>
-				Роль <span>*</span>
+				{label} <span>*</span>
 			</p>
 
 			<div
@@ -47,7 +47,7 @@ const SelectField = ({ value, onChange, error }: RoleSelectorProps) => {
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				<span className={value ? "" : styles.selector__placeholder}>
-					{value || "Выберите роль"}
+					{value || placeholder}
 				</span>
 				<svg
 					className={`${styles.selector__arrow} ${isOpen ? styles.selector__arrow_open : ""}`}
@@ -62,13 +62,13 @@ const SelectField = ({ value, onChange, error }: RoleSelectorProps) => {
 
 			{isOpen && (
 				<ul className={styles.selector__dropdown}>
-					{ROLES.map((role) => (
+					{options.map((option) => (
 						<li
-							key={role}
-							className={`${styles.selector__option} ${value === role ? styles.selector__option_active : ""}`}
-							onClick={() => handleSelect(role)}
+							key={option}
+							className={`${styles.selector__option} ${value === option ? styles.selector__option_active : ""}`}
+							onClick={() => handleSelect(option)}
 						>
-							{role}
+							{option}
 						</li>
 					))}
 				</ul>
@@ -78,4 +78,5 @@ const SelectField = ({ value, onChange, error }: RoleSelectorProps) => {
 		</div>
 	);
 };
+
 export default SelectField;

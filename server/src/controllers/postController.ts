@@ -4,6 +4,16 @@ import Post, { IPost, PostCategory } from "../models/Post";
 import { UserRole } from "../models/User";
 import { AuthRequest } from "../types/AuthRequest";
 
+const formatPostResponse = (post: IPost, userId?: string) => {
+	const { likedBy, ...postData } = post.toObject();
+	return {
+		...postData,
+		isLikedByUser: userId
+			? (likedBy?.some((id: any) => id?.toString() === userId) ?? false)
+			: false,
+	};
+};
+
 export const getPosts = async (req: AuthRequest, res: Response) => {
 	try {
 		const userId = req.user?.id;
@@ -17,15 +27,7 @@ export const getPosts = async (req: AuthRequest, res: Response) => {
 			.populate("author", "nickname role")
 			.sort({ createdAt: -1 });
 
-		const postsWithLikes = posts.map((post) => {
-			const { likedBy, ...postData } = post.toObject();
-			return {
-				...postData,
-				isLikedByUser: userId
-					? (likedBy?.some((id) => id?.toString() === userId) ?? false)
-					: false,
-			};
-		});
+		const postsWithLikes = posts.map((post) => formatPostResponse(post, userId));
 
 		res.json(postsWithLikes);
 	} catch (error) {
@@ -50,7 +52,9 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 			previewImage,
 		});
 
-		res.status(201).json(post);
+		await post.populate("author", "nickname role");
+
+		res.status(201).json(formatPostResponse(post, userId));
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка при создании поста" });
 	}
@@ -78,7 +82,9 @@ export const editPost = async (req: AuthRequest, res: Response) => {
 		if (previewImage !== undefined) post.previewImage = previewImage;
 
 		await post.save();
-		res.json(post);
+		await post.populate("author", "nickname role");
+
+		res.json(formatPostResponse(post, userId));
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка при обновлении поста" });
 	}

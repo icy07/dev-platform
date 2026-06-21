@@ -1,9 +1,11 @@
 import styles from "./Dashboard.module.scss";
 import { can } from "../../utils/permissions";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { openModal } from "../../store/slices/postsSlice";
 
 const Dashboard = () => {
+	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.auth);
 	if (!user) return null;
 
@@ -14,7 +16,9 @@ const Dashboard = () => {
 
 			<div className={styles.dashboard__actions}>
 				{can.createPost(user.role) && (
-					<button className={styles.dashboard__btn}>Создать пост</button>
+					<button className={styles.dashboard__btn} onClick={() => dispatch(openModal(null))}>
+						Создать пост
+					</button>
 				)}
 				{can.addPortfolio(user.role) && (
 					<button className={styles.dashboard__btn}>Добавить проект в портфолио</button>

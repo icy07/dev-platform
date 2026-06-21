@@ -10,6 +10,10 @@ interface PostsState {
 	posts: Post[];
 	isLoading: boolean;
 	filters: PostsFilter;
+	modal: {
+		isOpen: boolean;
+		editInfo: Post | null;
+	};
 }
 
 const initialState: PostsState = {
@@ -18,6 +22,10 @@ const initialState: PostsState = {
 	filters: {
 		type: null,
 		direction: null,
+	},
+	modal: {
+		isOpen: false,
+		editInfo: null,
 	},
 };
 
@@ -59,6 +67,14 @@ const postsSlice = createSlice({
 		setPostsLoading: (state, action: PayloadAction<boolean>) => {
 			state.isLoading = action.payload;
 		},
+		openModal: (state, action: PayloadAction<Post | null>) => {
+			state.modal.isOpen = true;
+			state.modal.editInfo = action.payload;
+		},
+		closeModal: (state) => {
+			state.modal.isOpen = false;
+			state.modal.editInfo = null;
+		},
 	},
 });
 
@@ -71,6 +87,8 @@ export const {
 	setPostFilters,
 	clearPostFilters,
 	setPostsLoading,
+	openModal,
+	closeModal,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

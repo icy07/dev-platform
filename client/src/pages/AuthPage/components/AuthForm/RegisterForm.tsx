@@ -13,6 +13,15 @@ interface RegisterFormProps {
 	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const ROLES: UserRole[] = [
+	"Frontend Developer",
+	"Backend Developer",
+	"QA Engineer",
+	"Designer",
+	"Manager",
+	"HR",
+];
+
 const RegisterForm = ({ styles, onSwitch, setLoading }: RegisterFormProps) => {
 	const [registerData, setRegisterData] = useState<RegisterData>({
 		firstName: "",
@@ -28,7 +37,7 @@ const RegisterForm = ({ styles, onSwitch, setLoading }: RegisterFormProps) => {
 	const [serverMessage, setServerMessage] = useState("");
 	const [result, setResult] = useState<"error" | "success">("error");
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 
 		setRegisterData({ ...registerData, [name]: value });
@@ -55,7 +64,7 @@ const RegisterForm = ({ styles, onSwitch, setLoading }: RegisterFormProps) => {
 		setLoading(true);
 
 		try {
-			const data = await registerRequest(registerData);
+			await registerRequest(registerData);
 
 			setServerMessage("Регистрация прошла успешно");
 			setResult("success");
@@ -142,9 +151,11 @@ const RegisterForm = ({ styles, onSwitch, setLoading }: RegisterFormProps) => {
 					error={errors.confirmPassword}
 				/>
 				<SelectField
+					label="Роль"
 					value={registerData.role}
-					error={errors.role}
 					onChange={handleChangeSelect}
+					options={ROLES}
+					error={errors.role}
 				/>
 			</div>
 
