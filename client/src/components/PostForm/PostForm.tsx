@@ -94,8 +94,14 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
+		if (file.size > 5 * 1024 * 1024) {
+			setServerMessage("Файл слишком большой. Максимальный размер — 5 МБ");
+			return;
+		}
+
 		setImgFile(file);
 		setIsNewPreview(true);
+		setServerMessage("");
 
 		const previewUrl = URL.createObjectURL(file);
 		setPreviewImg(previewUrl);
