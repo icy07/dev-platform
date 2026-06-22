@@ -1,0 +1,53 @@
+@use "../../styles/variables" as *;
+
+.wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+
+	margin: 0px 0px 20px 0px;
+}
+
+.title {
+	font-weight: 600;
+	font-size: 20px;
+}
+
+.main {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+
+	gap: 10px;
+
+	> div {
+		&:nth-child(2) {
+			min-width: 180px;
+		}
+	}
+}
+
+.clearBtn {
+	border: 1px solid rgba(239, 68, 68, 0.12);
+	padding: 11px;
+	border-radius: 8px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	svg {
+		width: 20px;
+	}
+
+	transition: 0.2s;
+
+	@media (any-hover: hover) {
+		&:hover {
+			border: 1px solid $error;
+			background-color: rgba(239, 68, 68, 0.12);
+		}
+	}
+}

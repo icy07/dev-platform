@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Post, PostType, UserRole } from "../../types";
 
-interface PostsFilter {
+export interface PostsFilter {
 	type: PostType | null;
 	direction: UserRole | null;
 }

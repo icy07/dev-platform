@@ -5,7 +5,7 @@ interface SelectFieldProps<T extends string> {
 	value: T | "";
 	onChange: (value: T) => void;
 	options: T[];
-	label: string;
+	label?: string;
 	placeholder?: string;
 	error?: string;
 }
@@ -38,9 +38,11 @@ const SelectField = <T extends string>({
 
 	return (
 		<div className={styles.selector} ref={ref}>
-			<p className={styles.selector__title}>
-				{label} <span>*</span>
-			</p>
+			{label && (
+				<p className={styles.selector__title}>
+					{label} <span>*</span>
+				</p>
+			)}
 
 			<div
 				className={`${styles.selector__trigger} ${error ? styles._error : ""}`}
