@@ -4,10 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { closeModal } from "../../store/slices/postsSlice";
 import PostForm from "../PostForm/PostForm";
+import { useEffect } from "react";
 
 const PostModal = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { isOpen, editInfo } = useSelector((state: RootState) => state.posts.modal);
+
+	useEffect(() => {
+		if (isOpen) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "";
+		}
+
+		return () => {
+			document.body.style.overflow = "";
+		};
+	}, [isOpen]);
 
 	if (!isOpen) return null;
 

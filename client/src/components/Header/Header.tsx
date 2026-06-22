@@ -4,6 +4,7 @@ import type { AppDispatch, RootState } from "../../store/store";
 import { removeUser } from "../../store/slices/authSlice";
 import { logoutRequest } from "../../api/authApi";
 import { useNavigate } from "react-router-dom";
+import { openModal } from "../../store/slices/postsSlice";
 
 const Header = () => {
 	const { user } = useSelector((state: RootState) => state.auth);
@@ -24,12 +25,18 @@ const Header = () => {
 
 	return (
 		<header className={styles.header}>
-			<div className={styles.header__user}>
-				<div className={styles.header__avatar}>{initials}</div>
-				<div className={styles.header__info}>
-					<p className={styles.header__nickname}>{user?.nickname}</p>
-					<p className={styles.header__role}>{user?.role}</p>
+			<div className={styles.header__wrapper}>
+				<div className={styles.header__user}>
+					<div className={styles.header__avatar}>{initials}</div>
+					<div className={styles.header__info}>
+						<p className={styles.header__nickname}>{user?.nickname}</p>
+						<p className={styles.header__role}>{user?.role}</p>
+					</div>
 				</div>
+
+				<button className={styles.header__btn} onClick={() => dispatch(openModal(null))}>
+					Создать пост
+				</button>
 			</div>
 
 			<button className={styles.header__logout} onClick={handleLogout} aria-label="Выйти">
