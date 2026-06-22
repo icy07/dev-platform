@@ -259,6 +259,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 								setImgFile(null);
 								setPreviewImg("");
 								setIsNewPreview(false);
+								setPostData({ ...postData, previewImage: "" });
 							}}
 						>
 							Удалить
