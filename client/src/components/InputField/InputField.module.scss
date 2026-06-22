@@ -37,8 +37,14 @@
 		}
 	}
 
+	&__textarea {
+		resize: none;
+		height: 130px;
+	}
+
 	&._error {
-		input {
+		input,
+		textarea {
 			border: 1px solid $error;
 			color: $error;
 

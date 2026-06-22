@@ -143,5 +143,5 @@ vite.config.ts.timestamp-*
 .vite/
 
 
-uploads/*
-!uploads/.gitkeep
+server/uploads/*
+!server/uploads/.gitkeep
