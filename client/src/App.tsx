@@ -45,7 +45,7 @@ const App = () => {
 			{laoding && <Loader />}
 			<Header />
 			<main className="main">
-				<Dashboard />
+				{/* <Dashboard /> */}
 				<PostsMain />
 			</main>
 			<PostModal />
