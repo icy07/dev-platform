@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { UserRole } from "../types";
+import type { PostType, UserRole } from "../types";
 import type { PostFormData } from "../components/PostForm/PostForm";
 
 const api = axios.create({
@@ -7,8 +7,10 @@ const api = axios.create({
 	withCredentials: true,
 });
 
-export const getPostsRequest = (filters?: { type?: string; direction?: UserRole }) =>
-	api.get("/posts", { params: filters });
+export const getPostsRequest = (filters?: {
+	type?: PostType | null;
+	direction?: UserRole | null;
+}) => api.get("/posts", { params: filters });
 
 export const createPostRequest = (
 	data: Omit<PostFormData, "previewImage"> & { previewImage?: string },

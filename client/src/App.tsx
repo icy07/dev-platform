@@ -14,10 +14,10 @@ import PostModal from "./components/PostModal/PostModal";
 
 const App = () => {
 	const navigate = useNavigate();
-	const [laoding, setLoading] = useState<boolean>(false);
-	const { isOpen } = useSelector((state: RootState) => state.posts.modal);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const dispatch = useDispatch<AppDispatch>();
+	const filters = useSelector((state: RootState) => state.posts.filters);
 
 	useEffect(() => {
 		const checkAuth = async () => {
@@ -25,24 +25,35 @@ const App = () => {
 
 			try {
 				const data = await checkAuthRequest();
-				const postData = await getPostsRequest();
-
 				dispatch(setUser(data.data));
-				dispatch(setPosts(postData.data));
-
 				setLoading(false);
-			} catch (error) {
+			} catch {
 				setLoading(false);
 				navigate("/auth");
 			}
 		};
 
 		checkAuth();
-	}, [navigate]);
+	}, [dispatch, navigate]);
+
+	useEffect(() => {
+		const loadPosts = async () => {
+			setLoading(true);
+
+			try {
+				const postData = await getPostsRequest(filters);
+				dispatch(setPosts(postData.data));
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadPosts();
+	}, [dispatch, filters]);
 
 	return (
-		<div style={{ overflow: isOpen ? "hidden" : "auto" }}>
-			{laoding && <Loader />}
+		<div>
+			{loading && <Loader />}
 			<Header />
 			<main className="main">
 				{/* <Dashboard /> */}
