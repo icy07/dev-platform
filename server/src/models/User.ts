@@ -15,7 +15,24 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	role: UserRole;
+	description?: string;
+	workplace?: string;
+	portfolio?: IProject[];
 }
+
+export interface IProject {
+	title: string;
+	description?: string;
+	links?: string[];
+	previewImage?: string;
+}
+
+const ProjectSchema = new mongoose.Schema<IProject>({
+	title: { type: String, required: true, maxLength: 100 },
+	description: { type: String },
+	links: [{ type: String }],
+	previewImage: { type: String },
+});
 
 const UserSchema = new mongoose.Schema<IUser>({
 	firstName: { type: String, required: true },
@@ -28,6 +45,9 @@ const UserSchema = new mongoose.Schema<IUser>({
 		enum: ["Frontend Developer", "Backend Developer", "QA Engineer", "Designer", "Manager", "HR"],
 		required: true,
 	},
+	description: { type: String },
+	workplace: { type: String },
+	portfolio: [ProjectSchema],
 });
 
 export default mongoose.model<IUser>("User", UserSchema);
