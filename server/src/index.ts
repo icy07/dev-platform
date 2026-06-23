@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "./routes/auth";
 import postRoutes from "./routes/posts";
+import uploadRoutes from "./routes/upload";
+import usersRoutes from "./routes/users";
 import path from "path";
 
 dotenv.config();
@@ -23,6 +25,8 @@ app.use(
 
 app.use("/api", authRoutes);
 app.use("/api", postRoutes);
+app.use("/api", uploadRoutes);
+app.use("/api", usersRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 mongoose
