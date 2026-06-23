@@ -21,6 +21,7 @@ export interface IUser extends Document {
 }
 
 export interface IProject {
+	_id?: mongoose.Types.ObjectId;
 	title: string;
 	description?: string;
 	links?: string[];
