@@ -4,15 +4,26 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { store } from "./store/store.ts";
 
-import App from "./App.tsx";
 import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 import "./index.scss";
 import NotFound from "./pages/NotFound/NotFound.tsx";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
+import Layout from "./components/Layout/Layout.tsx";
+import HomePage from "./pages/HomePage/HomePage.tsx";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
-		element: <App />,
+		element: <Layout />,
+		children: [
+			{
+				index: true,
+				element: <HomePage />,
+			},
+			{
+				path: "/profile/:id",
+				element: <ProfilePage />,
+			},
+		],
 	},
 	{
 		path: "/auth",
