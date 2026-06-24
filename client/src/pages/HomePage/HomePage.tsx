@@ -37,7 +37,6 @@ const HomePage = () => {
 			{loading && <Loader />}
 
 			<PostsMain />
-			<PostModal />
 		</>
 	);
 };

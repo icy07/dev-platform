@@ -9,6 +9,7 @@ import { deletePostRequest, likePostRequest, unlikePostRequest } from "../../api
 import ReactMarkdown from "react-markdown";
 import { getImageUrl } from "../../utils/getImgUrl";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import { Link } from "react-router-dom";
 
 const PREVIEW_LENGTH = 500;
 
@@ -91,9 +92,9 @@ const PostCard = ({ post }: PostProps) => {
 
 					<h2 className={styles.card__title}>{post.title}</h2>
 
-					<p className={styles.card__author}>
+					<Link to={`/profile/${post.author._id}`} className={styles.card__author}>
 						Автор: <span>{post.author.nickname}</span> · {formatDate(post.createdAt)}
-					</p>
+					</Link>
 
 					<div
 						className={`${styles.card__contentWrapper} ${isLong && !isExpanded ? styles.card__contentWrapper_notExpanded : ""}`}
