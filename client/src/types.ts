@@ -44,3 +44,24 @@ export interface Post {
 	previewImage?: string;
 	createdAt: string;
 }
+
+//! PROFILE TYPES ====================================================================================================
+
+export interface Project {
+	_id: string;
+	title: string;
+	description?: string;
+	links: string[];
+	previewImage?: string;
+}
+
+export interface UserProfile {
+	_id: string;
+	firstName: string;
+	lastName: string;
+	nickname: string;
+	role: UserRole;
+	description?: string;
+	workplace?: string;
+	portfolio: Project[];
+}
