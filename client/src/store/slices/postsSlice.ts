@@ -8,7 +8,6 @@ export interface PostsFilter {
 
 interface PostsState {
 	posts: Post[];
-	isLoading: boolean;
 	filters: PostsFilter;
 	modal: {
 		isOpen: boolean;
@@ -18,7 +17,6 @@ interface PostsState {
 
 const initialState: PostsState = {
 	posts: [],
-	isLoading: false,
 	filters: {
 		type: null,
 		direction: null,
@@ -64,9 +62,6 @@ const postsSlice = createSlice({
 		clearPostFilters: (state) => {
 			state.filters = initialState.filters;
 		},
-		setPostsLoading: (state, action: PayloadAction<boolean>) => {
-			state.isLoading = action.payload;
-		},
 		openModal: (state, action: PayloadAction<Post | null>) => {
 			state.modal.isOpen = true;
 			state.modal.editInfo = action.payload;
@@ -86,7 +81,6 @@ export const {
 	toggleLike,
 	setPostFilters,
 	clearPostFilters,
-	setPostsLoading,
 	openModal,
 	closeModal,
 } = postsSlice.actions;
