@@ -2,15 +2,15 @@
 
 .card {
 	background-color: $surface;
-	border: 0.5px solid $border;
+	border: 1px solid $surface;
 	border-radius: 12px;
 	overflow: hidden;
 	cursor: pointer;
-	transition: border-color 0.12s;
+	transition: border-color 0.2s;
 	position: relative;
 
 	&:hover {
-		border-color: lighten($border, 10%);
+		border-color: $border;
 	}
 
 	&__img {

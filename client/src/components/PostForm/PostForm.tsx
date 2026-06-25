@@ -1,5 +1,3 @@
-import styles from "./PostForm.module.scss";
-
 import { useState } from "react";
 import type { Post, PostType, UserRole } from "../../types";
 import InputField from "../InputField/InputField";
@@ -174,7 +172,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 	};
 
 	return (
-		<div className={styles.form}>
+		<div className="form">
 			<InputField
 				name="title"
 				onChange={handleChange}
@@ -185,18 +183,18 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				error={errors.title}
 			/>
 
-			<div className={styles.editor}>
-				<div className={styles.editor__tabs}>
+			<div className="editor">
+				<div className="editor__tabs">
 					<button
 						type="button"
-						className={`${styles.editor__tab} ${!isPreview ? styles.editor__tab_active : ""}`}
+						className={`editor__tab ${!isPreview ? "editor__tab_active" : ""}`}
 						onClick={() => setIsPreview(false)}
 					>
 						Редактор
 					</button>
 					<button
 						type="button"
-						className={`${styles.editor__tab} ${isPreview ? styles.editor__tab_active : ""}`}
+						className={`editor__tab ${isPreview ? "editor__tab_active" : ""}`}
 						onClick={() => setIsPreview(true)}
 					>
 						Превью
@@ -204,11 +202,11 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				</div>
 
 				{isPreview ? (
-					<div className={styles.editor__preview}>
+					<div className="editor__preview">
 						{postData.content ? (
 							<ReactMarkdown>{postData.content}</ReactMarkdown>
 						) : (
-							<p className={styles.editor__empty}>Нет контента для отображения</p>
+							<p className="editor__empty">Нет контента для отображения</p>
 						)}
 					</div>
 				) : (
@@ -225,7 +223,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				)}
 
 				<span
-					className={`${styles.editor__counter} ${postData.content.length > 20000 ? styles.editor__counter_error : ""}`}
+					className={`editor__counter ${postData.content.length > 20000 ? "editor__counter_error" : ""}`}
 				>
 					{postData.content.length} / 20000
 				</span>
@@ -247,9 +245,9 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				error={errors.direction}
 			/>
 
-			<div className={styles.imageUpload}>
+			<div className="imageUpload">
 				{previewImg ? (
-					<div className={styles.imageUpload__preview}>
+					<div className="imageUpload__preview">
 						<img
 							src={
 								initialData && initialData.previewImage && !isNewPreview
@@ -260,7 +258,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 						/>
 						<button
 							type="button"
-							className={styles.imageUpload__remove}
+							className="imageUpload__remove"
 							onClick={() => {
 								setImgFile(null);
 								setPreviewImg("");
@@ -272,12 +270,12 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 						</button>
 					</div>
 				) : (
-					<label className={styles.imageUpload__label}>
+					<label className="imageUpload__label">
 						<input
 							type="file"
 							accept="image/*"
 							onChange={handleImageChange}
-							className={styles.imageUpload__input}
+							className="imageUpload__input"
 						/>
 						<span>Выбрать изображение</span>
 					</label>
@@ -286,7 +284,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 
 			{serverMessage && <ErrorMessage msg={serverMessage} result={"error"} />}
 
-			<button className={`${styles.form__button} btn`} onClick={handleSubmit}>
+			<button className="form__button btn" onClick={handleSubmit}>
 				{initialData ? "Сохранить изменения" : "Опубликовать"}
 			</button>
 		</div>

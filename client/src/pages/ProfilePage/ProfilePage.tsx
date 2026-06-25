@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { getUserRequest } from "../../api/usersApi";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import { setProfile } from "../../store/slices/profileSlice";
+import { openProfileModal, setProfile } from "../../store/slices/profileSlice";
 import Loader from "../../components/Loader/Loader";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 
@@ -52,7 +52,10 @@ const ProfilePage = () => {
 						<div className={styles.profile__top}>
 							<h2 className={styles.profile__title}>Информация</h2>
 							{isOwner && (
-								<button className={styles.profile__btn}>
+								<button
+									className={styles.profile__btn}
+									onClick={() => dispatch(openProfileModal())}
+								>
 									<svg
 										width="15"
 										height="15"
