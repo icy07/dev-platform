@@ -60,6 +60,13 @@
 			color: $textPrimary;
 		}
 
+		span {
+			display: inline-block;
+			font-size: 25px;
+			line-height: 20px;
+			margin: 0px 4px 0px 0px;
+		}
+
 		svg {
 			width: 20px;
 			height: 20px;
