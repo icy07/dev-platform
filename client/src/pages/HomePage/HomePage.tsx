@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import PostsMain from "../../components/PostsMain/PostsMain";
-import PostModal from "../../components/PostModal/PostModal";
 import { getPostsRequest } from "../../api/postsApi";
 import { setPosts } from "../../store/slices/postsSlice";
 import Loader from "../../components/Loader/Loader";
@@ -37,7 +36,6 @@ const HomePage = () => {
 			{loading && <Loader />}
 
 			<PostsMain />
-			<PostModal />
 		</>
 	);
 };

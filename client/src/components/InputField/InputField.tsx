@@ -9,6 +9,7 @@ type InputType = {
 	placeholder: string;
 	error: string | undefined;
 	isTextArea?: boolean;
+	isRequired?: boolean;
 };
 
 const InputField = ({
@@ -20,11 +21,12 @@ const InputField = ({
 	value,
 	error,
 	isTextArea = false,
+	isRequired = true,
 }: InputType) => {
 	return (
 		<label className={`${styles.inputField} ${error ? styles._error : ""}`}>
 			<p>
-				{label} <span>*</span>
+				{label} {isRequired && <span>*</span>}
 			</p>
 			<span className={styles.inputField__errorText}>{error}</span>
 

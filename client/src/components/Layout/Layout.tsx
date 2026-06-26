@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { checkAuthRequest } from "../../api/authApi";
 import { setUser } from "../../store/slices/authSlice";
 import Loader from "../Loader/Loader";
+import PostModal from "../PostModal/PostModal";
+import ProfileModal from "../ProfileModal/ProfileModal";
 
 const Layout = () => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +44,8 @@ const Layout = () => {
 			<main className="main">
 				<Outlet />
 			</main>
+			<PostModal />
+			<ProfileModal />
 		</>
 	);
 };

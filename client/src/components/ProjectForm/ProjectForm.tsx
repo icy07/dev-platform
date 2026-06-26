@@ -1,69 +1,45 @@
 import { useState } from "react";
-import type { Post, PostType, UserRole } from "../../types";
+import type { Project } from "../../types";
 import InputField from "../InputField/InputField";
-import SelectField from "../SelectField/SelectField";
 import ReactMarkdown from "react-markdown";
-import { createPostRequest, updatePostRequest, uploadImageRequest } from "../../api/postsApi";
 import { getImageUrl } from "../../utils/getImgUrl";
 import ErrorMessage from "../../pages/AuthPage/components/ErrorMessage/ErrorMessage";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../../store/store";
-import { addPost, updatePost } from "../../store/slices/postsSlice";
+import { uploadImageRequest } from "../../api/postsApi";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { addProject, removeProject, updateProject } from "../../store/slices/profileSlice";
+import { addProjectRequest, deleteProjectRequest, updateProjectRequest } from "../../api/usersApi";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
-interface PostFormProps {
-	initialData: Post | null;
-	onSuccess?: () => void;
+interface ProjectFormProps {
+	initialData: Project | null;
+	onSuccess: () => void;
 }
 
-export interface FormErrors {
+interface ProjectErrors {
 	title?: string;
-	content?: string;
-	previewImage?: string;
-	type?: string;
-	direction?: string;
+	links?: string;
 }
 
-const ROLES: UserRole[] = [
-	"Frontend Developer",
-	"Backend Developer",
-	"QA Engineer",
-	"Designer",
-	"Manager",
-	"HR",
-];
+type ProjectFormData = Omit<Project, "_id"> & {
+	description: string | "";
+};
 
-export interface PostFormData {
-	title: string;
-	content: string;
-	previewImage: string;
-	type: PostType | "";
-	direction: UserRole | "";
-}
-
-const POST_TYPES: PostType[] = ["Контент", "Событие", "Вакансия"];
-
-const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
+const ProjectForm = ({ initialData, onSuccess }: ProjectFormProps) => {
 	const dispatch = useDispatch<AppDispatch>();
+	const profile = useSelector((state: RootState) => state.profile.profile);
 
-	const [postData, setPostData] = useState<PostFormData>(
-		initialData
-			? {
-					title: initialData.title,
-					content: initialData.content,
-					previewImage: initialData.previewImage ?? "",
-					type: initialData.type,
-					direction: initialData.direction,
-				}
-			: {
-					title: "",
-					content: "",
-					previewImage: "",
-					type: "",
-					direction: "",
-				},
-	);
-	const [errors, setErrors] = useState<FormErrors>({});
+	const [projectForm, setProjectForm] = useState<ProjectFormData>({
+		title: initialData?.title || "",
+		description: initialData?.description || "",
+		links: initialData?.links || [""],
+		previewImage: initialData?.previewImage || "",
+	});
+	const [linksText, setLinksText] = useState(initialData?.links?.join("\n") ?? "");
+
+	const [errors, setErrors] = useState<ProjectErrors>({});
 	const [serverMessage, setServerMessage] = useState("");
+
 	const [isPreview, setIsPreview] = useState(false);
 	const [isNewPreview, setIsNewPreview] = useState(false);
 
@@ -73,18 +49,10 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 
-		setPostData({ ...postData, [name]: value });
+		setProjectForm({ ...projectForm, [name]: value });
 
-		if (errors[name as keyof FormErrors]) {
+		if (errors[name as keyof ProjectErrors]) {
 			setErrors({ ...errors, [name]: undefined });
-		}
-	};
-
-	const handleChangeSelect = (field: "type" | "direction") => (value: PostType | UserRole) => {
-		setPostData({ ...postData, [field]: value });
-
-		if (errors[field]) {
-			setErrors({ ...errors, [field]: undefined });
 		}
 	};
 
@@ -105,8 +73,33 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 		setPreviewImg(previewUrl);
 	};
 
-	const validateForm = (formData: Post): FormErrors => {
-		const errors: FormErrors = {};
+	const isValidUrl = (url: string) => {
+		try {
+			new URL(url);
+			return true;
+		} catch (error) {
+			return false;
+		}
+	};
+
+	const validateLinks = (text: string): string | undefined => {
+		const lines = text
+			.split("\n")
+			.map((line) => line.trim())
+			.filter(Boolean);
+
+		const inavlidLinks = lines.filter((line) => !isValidUrl(line));
+		if (inavlidLinks.length > 0) {
+			return `Недопустимые ссылки: ${inavlidLinks.join(", ")}`;
+		}
+
+		return undefined;
+	};
+
+	const validateForm = (formData: ProjectFormData): ProjectErrors => {
+		const errors: ProjectErrors = {};
+
+		const linkError = validateLinks(linksText);
 
 		if (!formData.title.trim()) {
 			errors.title = "Заполните название";
@@ -114,25 +107,16 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 			errors.title = "Название должно быть не более 100 символов";
 		}
 
-		if (!formData.content.trim()) {
-			errors.content = "Заполните контент";
-		} else if (formData.content.length > 20000) {
-			errors.content = "Контент должен быть не более 20000 символов";
-		}
-
-		if (!formData.type) {
-			errors.type = "Выберите тип поста";
-		}
-
-		if (!formData.direction) {
-			errors.direction = "Выберите направление";
+		if (linkError) {
+			console.log(linkError);
+			errors.links = linkError;
 		}
 
 		return errors;
 	};
 
 	const handleSubmit = async () => {
-		const validatedErrors = validateForm(postData as Post);
+		const validatedErrors = validateForm(projectForm);
 
 		if (Object.keys(validatedErrors).length > 0) {
 			setErrors(validatedErrors);
@@ -140,7 +124,11 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 		}
 
 		try {
-			let previewImageUrl = postData.previewImage;
+			let previewImageUrl = projectForm.previewImage;
+			const links = linksText
+				.split("\n")
+				.map((l) => l.trim())
+				.filter(Boolean);
 
 			if (isNewPreview) {
 				const formData = new FormData();
@@ -150,18 +138,20 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				previewImageUrl = data.url;
 			}
 
+			const updatedData = { ...projectForm, links };
+
 			if (initialData) {
-				const { data } = await updatePostRequest(initialData._id, {
-					...postData,
+				const { data } = await updateProjectRequest(profile!._id, initialData._id, {
+					...updatedData,
 					previewImage: previewImageUrl,
 				});
-				dispatch(updatePost(data));
+				dispatch(updateProject(data.project));
 			} else {
-				const { data } = await createPostRequest({
-					...postData,
+				const { data } = await addProjectRequest(profile!._id, {
+					...updatedData,
 					previewImage: previewImageUrl,
 				});
-				dispatch(addPost(data));
+				dispatch(addProject(data.project));
 			}
 
 			onSuccess?.();
@@ -177,9 +167,9 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 				name="title"
 				onChange={handleChange}
 				type="text"
-				value={postData.title}
-				label="Заголовок"
-				placeholder={"Напишите заголовок статьи"}
+				value={projectForm.title}
+				label="Название"
+				placeholder={"Название статьи"}
 				error={errors.title}
 			/>
 
@@ -203,46 +193,45 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 
 				{isPreview ? (
 					<div className="editor__preview">
-						{postData.content ? (
-							<ReactMarkdown>{postData.content}</ReactMarkdown>
+						{projectForm.description ? (
+							<ReactMarkdown>{projectForm.description}</ReactMarkdown>
 						) : (
 							<p className="editor__empty">Нет контента для отображения</p>
 						)}
 					</div>
 				) : (
 					<InputField
-						name="content"
+						name="description"
 						onChange={handleChange}
 						type="text"
-						value={postData.content}
-						label="Текст статьи"
+						value={projectForm.description}
+						label="Текст портфолио"
 						placeholder="Напишите текст в формате Markdown"
-						error={errors.content}
+						error={undefined}
 						isTextArea={true}
+						isRequired={false}
 					/>
 				)}
 
 				<span
-					className={`editor__counter ${postData.content.length > 20000 ? "editor__counter_error" : ""}`}
+					className={`editor__counter ${projectForm.description.length > 20000 ? "editor__counter_error" : ""}`}
 				>
-					{postData.content.length} / 20000
+					{projectForm.description.length} / 20000
 				</span>
 			</div>
 
-			<SelectField
-				label="Тип поста"
-				value={postData.type}
-				onChange={handleChangeSelect("type")}
-				options={POST_TYPES}
-				error={errors.type}
-			/>
-
-			<SelectField
-				label="Направление"
-				value={postData.direction}
-				onChange={handleChangeSelect("direction")}
-				options={ROLES}
-				error={errors.direction}
+			<InputField
+				name="links"
+				onChange={(e) => {
+					setLinksText(e.target.value);
+				}}
+				type="text"
+				value={linksText}
+				label="Ссылки"
+				placeholder={"https://github.com/...\nhttps://example.com"}
+				error={errors.links}
+				isTextArea={true}
+				isRequired={false}
 			/>
 
 			<div className="imageUpload">
@@ -263,7 +252,7 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 								setImgFile(null);
 								setPreviewImg("");
 								setIsNewPreview(false);
-								setPostData({ ...postData, previewImage: "" });
+								setProjectForm({ ...projectForm, previewImage: "" });
 							}}
 						>
 							Удалить
@@ -290,4 +279,4 @@ const PostForm = ({ initialData, onSuccess }: PostFormProps) => {
 		</div>
 	);
 };
-export default PostForm;
+export default ProjectForm;

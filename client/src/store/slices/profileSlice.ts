@@ -3,10 +3,24 @@ import type { Project, UserProfile } from "../../types";
 
 interface ProfileState {
 	profile: UserProfile | null;
+	profileModal: {
+		isOpen: boolean;
+	};
+	projectModal: {
+		isOpen: boolean;
+		editInfo: Project | null;
+	};
 }
 
 const initialState: ProfileState = {
 	profile: null,
+	profileModal: {
+		isOpen: false,
+	},
+	projectModal: {
+		isOpen: false,
+		editInfo: null,
+	},
 };
 
 const profileSlice = createSlice({
@@ -40,10 +54,33 @@ const profileSlice = createSlice({
 				);
 			}
 		},
+		openProfileModal: (state) => {
+			state.profileModal.isOpen = true;
+		},
+		closeProfileModal: (state) => {
+			state.profileModal.isOpen = false;
+		},
+		openProjectModal: (state, action: PayloadAction<Project | null>) => {
+			state.projectModal.isOpen = true;
+			state.projectModal.editInfo = action.payload;
+		},
+		closeProjectModal: (state) => {
+			state.projectModal.isOpen = false;
+			state.projectModal.editInfo = null;
+		},
 	},
 });
 
-export const { setProfile, updateProfile, addProject, updateProject, removeProject } =
-	profileSlice.actions;
+export const {
+	setProfile,
+	updateProfile,
+	addProject,
+	updateProject,
+	removeProject,
+	openProfileModal,
+	openProjectModal,
+	closeProfileModal,
+	closeProjectModal,
+} = profileSlice.actions;
 
 export default profileSlice.reducer;
