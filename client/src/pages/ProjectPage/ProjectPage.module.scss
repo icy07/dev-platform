@@ -1,0 +1,150 @@
+@use "../../styles/variables" as *;
+
+.project {
+	width: 100%;
+	max-width: 1700px;
+	margin: 0 auto;
+	padding: 32px 24px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+
+	color: $textPrimary;
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__imageWrapper {
+		position: relative;
+		width: 100%;
+		border-radius: 16px;
+		overflow: hidden;
+		background: $surface;
+		border: 1px solid $border;
+	}
+
+	&__image {
+		display: block;
+		width: 100%;
+		max-height: 550px;
+		object-fit: cover;
+	}
+
+	&__actions {
+		z-index: 2;
+		display: flex;
+		gap: 4px;
+		position: absolute;
+		top: 8px;
+		right: 8px;
+	}
+
+	&__btn {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background-color: $border;
+		color: $textPrimary;
+		border: none;
+		font-size: 13px;
+		cursor: pointer;
+		padding: 12px 18px;
+		border-radius: 8px;
+		transition:
+			background-color 0.12s,
+			color 0.12s;
+
+		&:hover {
+			background-color: $surface;
+			color: $textPrimary;
+		}
+
+		&_delete {
+			&:hover {
+				color: $error;
+			}
+		}
+	}
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+
+	&__title {
+		font-size: 2.2rem;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	&__author {
+		font-size: 1rem;
+		color: $textSecondary;
+
+		a {
+			color: $primaryColor;
+			font-weight: 600;
+
+			@media (any-hover: hover) {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+
+		h2 {
+			font-size: 1.2rem;
+			font-weight: 600;
+			color: $textPrimary;
+		}
+	}
+
+	&__description {
+		font-size: 1rem;
+		line-height: 1.8;
+		color: $textSecondary;
+		white-space: pre-wrap;
+	}
+
+	&__links {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+
+		li {
+			background: $surface;
+			border: 1px solid $border;
+			border-radius: 10px;
+			transition: border-color 0.2s;
+		}
+
+		li:hover {
+			border-color: $primaryColor;
+		}
+
+		a {
+			display: block;
+			padding: 14px 16px;
+			color: $textPrimary;
+			text-decoration: none;
+			word-break: break-all;
+			transition: color 0.2s;
+		}
+
+		a:hover {
+			color: $primaryHover;
+		}
+	}
+}

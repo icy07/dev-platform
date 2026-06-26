@@ -14,6 +14,7 @@ const ProfilePage = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const profile = useSelector((state: RootState) => state.profile.profile);
 	const { user } = useSelector((state: RootState) => state.auth);
+
 	const [isOwner, setIsOwner] = useState(false);
 
 	const [loading, setLoading] = useState<boolean>(false);

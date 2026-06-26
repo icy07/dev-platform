@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { Project } from "../../types";
 import styles from "./ProjectCard.module.scss";
 import { getImageUrl } from "../../utils/getImgUrl";
@@ -9,6 +9,7 @@ import { deleteProjectRequest } from "../../api/usersApi";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { removeProject } from "../../store/slices/profileSlice";
+import ReactMarkdown from "react-markdown";
 
 interface ProjectCardProps {
 	project: Project;
@@ -17,8 +18,6 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
-	const navigate = useNavigate();
-
 	const dispatch = useDispatch<AppDispatch>();
 	const profile = useSelector((state: RootState) => state.profile.profile);
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -31,7 +30,13 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 
 	return (
 		<>
-			<div className={styles.card} onClick={() => navigate(`/project/${project._id}`)}>
+			<Link
+				// to={{
+				// 	pathname: `project/${project._id}`,
+				// }}
+				to={`project/${project._id}`}
+				className={styles.card}
+			>
 				<div
 					className={`${styles.card__img} ${project.previewImage ? "" : styles.card__imgPlaceholder}`}
 				>
@@ -44,11 +49,13 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 					<p className={styles.card__title}>{project.title}</p>
 
 					{project.description && (
-						<p className={styles.card__desc}>
-							{project.description.length > 300
-								? project.description.slice(0, 300) + "..."
-								: project.description}
-						</p>
+						<div className={styles.card__desc}>
+							<ReactMarkdown>
+								{project.description.length > 300
+									? project.description.slice(0, 300) + "..."
+									: project.description}
+							</ReactMarkdown>
+						</div>
 					)}
 				</div>
 				{isOwner && (
@@ -56,6 +63,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						<button
 							className={styles.card__btn}
 							onClick={(e) => {
+								e.preventDefault();
 								e.stopPropagation();
 								onEdit(project);
 							}}
@@ -76,9 +84,9 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						<button
 							className={`${styles.card__btn} ${styles.card__btn_delete}`}
 							onClick={(e) => {
+								e.preventDefault();
 								e.stopPropagation();
 								setIsConfirmOpen(true);
-								// onDelete(project._id);
 							}}
 							aria-label="Удалить"
 						>
@@ -96,7 +104,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						</button>
 					</div>
 				)}
-			</div>
+			</Link>
 			<ConfirmationModal
 				isOpen={isConfirmOpen}
 				title="Удалить проект из портфолио?"
