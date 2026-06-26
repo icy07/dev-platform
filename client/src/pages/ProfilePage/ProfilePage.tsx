@@ -96,19 +96,19 @@ const ProfilePage = () => {
 							)}
 						</div>
 					</div>
-					{profile.portfolio.length > 0 && (
-						<div className={styles.profile__wrapper}>
-							<div className={styles.profile__top}>
-								<h2 className={styles.profile__title}>Портфолио</h2>
-								{isOwner && (
-									<button
-										className={styles.profile__btn}
-										onClick={() => dispatch(openProjectModal(null))}
-									>
-										<span>+</span> Добавить проект
-									</button>
-								)}
-							</div>
+					<div className={styles.profile__wrapper}>
+						<div className={styles.profile__top}>
+							<h2 className={styles.profile__title}>Портфолио</h2>
+							{isOwner && (
+								<button
+									className={styles.profile__btn}
+									onClick={() => dispatch(openProjectModal(null))}
+								>
+									<span>+</span> Добавить проект
+								</button>
+							)}
+						</div>
+						{profile.portfolio.length > 0 && (
 							<div className={styles.profile__projects}>
 								{profile.portfolio.map((project) => (
 									<ProjectCard
@@ -116,12 +116,11 @@ const ProfilePage = () => {
 										isOwner={isOwner}
 										key={project._id}
 										onEdit={() => dispatch(openProjectModal(project))}
-										// onDelete={() => console.log("del")}
 									/>
 								))}
 							</div>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			)}
 		</>
