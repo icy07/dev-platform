@@ -4,6 +4,12 @@ import InputField from "../InputField/InputField";
 import ReactMarkdown from "react-markdown";
 import { getImageUrl } from "../../utils/getImgUrl";
 import ErrorMessage from "../../pages/AuthPage/components/ErrorMessage/ErrorMessage";
+import { uploadImageRequest } from "../../api/postsApi";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { addProject, removeProject, updateProject } from "../../store/slices/profileSlice";
+import { addProjectRequest, deleteProjectRequest, updateProjectRequest } from "../../api/usersApi";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 interface ProjectFormProps {
 	initialData: Project | null;
@@ -12,6 +18,7 @@ interface ProjectFormProps {
 
 interface ProjectErrors {
 	title?: string;
+	links?: string;
 }
 
 type ProjectFormData = Omit<Project, "_id"> & {
@@ -19,12 +26,17 @@ type ProjectFormData = Omit<Project, "_id"> & {
 };
 
 const ProjectForm = ({ initialData, onSuccess }: ProjectFormProps) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const profile = useSelector((state: RootState) => state.profile.profile);
+
 	const [projectForm, setProjectForm] = useState<ProjectFormData>({
 		title: initialData?.title || "",
 		description: initialData?.description || "",
 		links: initialData?.links || [""],
 		previewImage: initialData?.previewImage || "",
 	});
+	const [linksText, setLinksText] = useState(initialData?.links?.join("\n") ?? "");
+
 	const [errors, setErrors] = useState<ProjectErrors>({});
 	const [serverMessage, setServerMessage] = useState("");
 
@@ -61,7 +73,93 @@ const ProjectForm = ({ initialData, onSuccess }: ProjectFormProps) => {
 		setPreviewImg(previewUrl);
 	};
 
-	const handleSubmit = async () => {};
+	const isValidUrl = (url: string) => {
+		try {
+			new URL(url);
+			return true;
+		} catch (error) {
+			return false;
+		}
+	};
+
+	const validateLinks = (text: string): string | undefined => {
+		const lines = text
+			.split("\n")
+			.map((line) => line.trim())
+			.filter(Boolean);
+
+		const inavlidLinks = lines.filter((line) => !isValidUrl(line));
+		if (inavlidLinks.length > 0) {
+			return `Недопустимые ссылки: ${inavlidLinks.join(", ")}`;
+		}
+
+		return undefined;
+	};
+
+	const validateForm = (formData: ProjectFormData): ProjectErrors => {
+		const errors: ProjectErrors = {};
+
+		const linkError = validateLinks(linksText);
+
+		if (!formData.title.trim()) {
+			errors.title = "Заполните название";
+		} else if (formData.title.length > 100) {
+			errors.title = "Название должно быть не более 100 символов";
+		}
+
+		if (linkError) {
+			console.log(linkError);
+			errors.links = linkError;
+		}
+
+		return errors;
+	};
+
+	const handleSubmit = async () => {
+		const validatedErrors = validateForm(projectForm);
+
+		if (Object.keys(validatedErrors).length > 0) {
+			setErrors(validatedErrors);
+			return;
+		}
+
+		try {
+			let previewImageUrl = projectForm.previewImage;
+			const links = linksText
+				.split("\n")
+				.map((l) => l.trim())
+				.filter(Boolean);
+
+			if (isNewPreview) {
+				const formData = new FormData();
+				formData.append("image", imgFile!);
+
+				const { data } = await uploadImageRequest(formData);
+				previewImageUrl = data.url;
+			}
+
+			const updatedData = { ...projectForm, links };
+
+			if (initialData) {
+				const { data } = await updateProjectRequest(profile!._id, initialData._id, {
+					...updatedData,
+					previewImage: previewImageUrl,
+				});
+				dispatch(updateProject(data.project));
+			} else {
+				const { data } = await addProjectRequest(profile!._id, {
+					...updatedData,
+					previewImage: previewImageUrl,
+				});
+				dispatch(addProject(data.project));
+			}
+
+			onSuccess?.();
+		} catch (err: any) {
+			const message = err.response?.data?.message || "Ошибка сервера";
+			setServerMessage(message);
+		}
+	};
 
 	return (
 		<div className="form">
@@ -123,13 +221,15 @@ const ProjectForm = ({ initialData, onSuccess }: ProjectFormProps) => {
 			</div>
 
 			<InputField
-				name="description"
-				onChange={handleChange}
+				name="links"
+				onChange={(e) => {
+					setLinksText(e.target.value);
+				}}
 				type="text"
-				value={projectForm.description}
-				label="Текст портфолио"
-				placeholder="Напишите текст в формате Markdown"
-				error={undefined}
+				value={linksText}
+				label="Ссылки"
+				placeholder={"https://github.com/...\nhttps://example.com"}
+				error={errors.links}
 				isTextArea={true}
 				isRequired={false}
 			/>

@@ -116,7 +116,7 @@ const ProfilePage = () => {
 										isOwner={isOwner}
 										key={project._id}
 										onEdit={() => dispatch(openProjectModal(project))}
-										onDelete={() => console.log("del")}
+										// onDelete={() => console.log("del")}
 									/>
 								))}
 							</div>
