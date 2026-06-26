@@ -25,8 +25,8 @@ const ProjectPage = () => {
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
 	useEffect(() => {
-		document.title = "Страница пользователя";
-	}, []);
+		document.title = project?.title ?? "Страница проекта";
+	}, [profile]);
 
 	useEffect(() => {
 		const fetchProfile = async () => {
