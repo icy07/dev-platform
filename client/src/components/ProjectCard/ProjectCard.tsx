@@ -9,6 +9,7 @@ import { deleteProjectRequest } from "../../api/usersApi";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { removeProject } from "../../store/slices/profileSlice";
+import ReactMarkdown from "react-markdown";
 
 interface ProjectCardProps {
 	project: Project;
@@ -31,7 +32,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 
 	return (
 		<>
-			<div className={styles.card} onClick={() => navigate(`/project/${project._id}`)}>
+			<div className={styles.card} onClick={() => navigate(`project/${project._id}`)}>
 				<div
 					className={`${styles.card__img} ${project.previewImage ? "" : styles.card__imgPlaceholder}`}
 				>
@@ -44,11 +45,13 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 					<p className={styles.card__title}>{project.title}</p>
 
 					{project.description && (
-						<p className={styles.card__desc}>
-							{project.description.length > 300
-								? project.description.slice(0, 300) + "..."
-								: project.description}
-						</p>
+						<div className={styles.card__desc}>
+							<ReactMarkdown>
+								{project.description.length > 300
+									? project.description.slice(0, 300) + "..."
+									: project.description}
+							</ReactMarkdown>
+						</div>
 					)}
 				</div>
 				{isOwner && (
@@ -78,7 +81,6 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 							onClick={(e) => {
 								e.stopPropagation();
 								setIsConfirmOpen(true);
-								// onDelete(project._id);
 							}}
 							aria-label="Удалить"
 						>

@@ -1,7 +1,9 @@
 @use "../../styles/_variables" as *;
 
 .profile {
+	max-width: 1700px;
 	width: 100%;
+	margin: 0px auto;
 	padding: 28px 24px;
 
 	&__wrapper {

@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound/NotFound.tsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 import Layout from "./components/Layout/Layout.tsx";
 import HomePage from "./pages/HomePage/HomePage.tsx";
+import ProjectPage from "./pages/ProjectPage/ProjectPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
 			{
 				path: "/profile/:id",
 				element: <ProfilePage />,
+			},
+			{
+				path: "/profile/:id/project/:projectId",
+				element: <ProjectPage />,
 			},
 		],
 	},
