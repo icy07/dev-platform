@@ -4,33 +4,23 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import type { Project, UserProfile } from "../../types";
+import type { Project } from "../../types";
 import { deleteProjectRequest, getUserRequest } from "../../api/usersApi";
 import Loader from "../../components/Loader/Loader";
 import { getImageUrl } from "../../utils/getImgUrl";
 import ReactMarkdown from "react-markdown";
-import { openProjectModal, removeProject } from "../../store/slices/profileSlice";
+import { openProjectModal, removeProject, setProfile } from "../../store/slices/profileSlice";
 import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
 
 const ProjectPage = () => {
 	const { id, projectId } = useParams();
 	const navigate = useNavigate();
-
 	const dispatch = useDispatch<AppDispatch>();
+
 	const { user } = useSelector((state: RootState) => state.auth);
+	const profile = useSelector((state: RootState) => state.profile.profile);
 
 	const [loading, setLoading] = useState<boolean>(false);
-	const [userinfo, setUserInfo] = useState<Partial<UserProfile>>({
-		firstName: "",
-		lastName: "",
-		_id: "",
-	});
-	const [project, setPoject] = useState<Partial<Project>>({
-		title: "",
-		description: "",
-		links: [],
-		previewImage: "",
-	});
 	const [isOwner, setIsOwner] = useState(false);
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -39,33 +29,31 @@ const ProjectPage = () => {
 	}, []);
 
 	useEffect(() => {
-		const getProject = async () => {
+		const fetchProfile = async () => {
+			if (profile?._id === id) return;
+
 			setLoading(true);
 			const { data } = await getUserRequest(id!);
-
-			const { firstName, lastName, _id } = data;
-			const project = data.portfolio.find((project: Project) => project._id === projectId);
-
-			setUserInfo({ firstName, lastName, _id });
-			setPoject(project);
-
+			dispatch(setProfile(data));
 			setLoading(false);
 		};
 
-		getProject();
-	}, []);
+		fetchProfile();
+	}, [id]);
 
 	useEffect(() => {
-		if (user && userinfo) {
-			setIsOwner(user.id === userinfo._id);
+		if (user && profile) {
+			setIsOwner(user.id === profile._id);
 		}
-	}, [user, userinfo]);
+	}, [user, profile]);
+
+	const project = profile?.portfolio.find((p) => p._id === projectId);
 
 	const handleDelete = async () => {
-		await deleteProjectRequest(userinfo._id!, project._id!);
-		dispatch(removeProject(project._id!));
+		await deleteProjectRequest(profile!._id, project!._id);
+		dispatch(removeProject(project!._id!));
 		setIsConfirmOpen(false);
-		navigate(`/profile/${user?.id}`);
+		navigate(`/profile/${id}`);
 	};
 
 	return (
@@ -140,7 +128,7 @@ const ProjectPage = () => {
 							<p className={styles.project__author}>
 								Автор:{" "}
 								<Link to={`/profile/${id}`}>
-									{userinfo.firstName} {userinfo.lastName}
+									{profile?.firstName} {profile?.lastName}
 								</Link>
 							</p>
 							{project.description && (

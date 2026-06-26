@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { Project } from "../../types";
 import styles from "./ProjectCard.module.scss";
 import { getImageUrl } from "../../utils/getImgUrl";
@@ -18,8 +18,6 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
-	const navigate = useNavigate();
-
 	const dispatch = useDispatch<AppDispatch>();
 	const profile = useSelector((state: RootState) => state.profile.profile);
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -32,7 +30,13 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 
 	return (
 		<>
-			<div className={styles.card} onClick={() => navigate(`project/${project._id}`)}>
+			<Link
+				// to={{
+				// 	pathname: `project/${project._id}`,
+				// }}
+				to={`project/${project._id}`}
+				className={styles.card}
+			>
 				<div
 					className={`${styles.card__img} ${project.previewImage ? "" : styles.card__imgPlaceholder}`}
 				>
@@ -59,6 +63,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						<button
 							className={styles.card__btn}
 							onClick={(e) => {
+								e.preventDefault();
 								e.stopPropagation();
 								onEdit(project);
 							}}
@@ -79,6 +84,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						<button
 							className={`${styles.card__btn} ${styles.card__btn_delete}`}
 							onClick={(e) => {
+								e.preventDefault();
 								e.stopPropagation();
 								setIsConfirmOpen(true);
 							}}
@@ -98,7 +104,7 @@ const ProjectCard = ({ project, isOwner, onEdit }: ProjectCardProps) => {
 						</button>
 					</div>
 				)}
-			</div>
+			</Link>
 			<ConfirmationModal
 				isOpen={isConfirmOpen}
 				title="Удалить проект из портфолио?"
