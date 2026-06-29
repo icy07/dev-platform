@@ -66,12 +66,6 @@ JWT_SECRET=твой_секретный_ключ
 CLIENT_URL=http://localhost:5173
 ```
 
-Создать файл `client/.env`:
-
-```
-VITE_API_URL=http://localhost:5000
-```
-
 ```bash
 npm run dev
 ```
@@ -81,6 +75,15 @@ npm run dev
 ```bash
 cd client
 npm install
+```
+
+Создать файл `client/.env`:
+
+```
+VITE_API_URL=http://localhost:5000
+```
+
+```bash
 npm run dev
 ```
 
