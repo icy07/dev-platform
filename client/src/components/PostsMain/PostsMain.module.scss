@@ -1,0 +1,11 @@
+@use "../../styles/variables" as *;
+
+.main {
+	max-width: 1700px;
+	margin: 0px auto;
+	padding: 28px 24px;
+
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}

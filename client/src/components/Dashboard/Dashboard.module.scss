@@ -1,0 +1,42 @@
+@use "../../styles/variables" as *;
+
+.dashboard {
+	min-width: 250px;
+	padding: 28px 0px 28px 24px;
+
+	&__title {
+		font-size: 16px;
+		font-weight: 500;
+		margin-bottom: 4px;
+	}
+
+	&__role {
+		font-size: 13px;
+		color: $textSecondary;
+		margin-bottom: 24px;
+	}
+
+	&__actions {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		max-width: 400px;
+	}
+
+	&__btn {
+		display: flex;
+		align-items: center;
+		padding: 11px 14px;
+		border-radius: 8px;
+		border: 1px solid $border;
+		background: transparent;
+		cursor: pointer;
+		font-size: 14px;
+		text-align: left;
+		transition: background-color 0.12s;
+
+		&:hover {
+			background-color: $surface;
+		}
+	}
+}

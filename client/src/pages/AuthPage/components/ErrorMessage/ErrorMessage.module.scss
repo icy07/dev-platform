@@ -1,0 +1,26 @@
+@use "../../../../styles/variables" as *;
+
+.errorMsg {
+	margin: 20px 0px 0px 0px;
+	width: 100%;
+
+	border-radius: 4px;
+	padding: 20px;
+
+	text-align: center;
+
+	p {
+		color: $textPrimary;
+		font-weight: 600;
+	}
+
+	&._error {
+		border: 1px solid $error;
+		background-color: $error;
+	}
+
+	&._success {
+		border: 1px solid $success;
+		background-color: $success;
+	}
+}

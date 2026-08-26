@@ -1,0 +1,56 @@
+@use "../../styles/variables" as *;
+
+.inputField {
+	position: relative;
+
+	p {
+		display: inline-block;
+		font-size: 14px;
+		margin: 0px 0px 10px 0px;
+
+		span {
+			color: $error;
+		}
+	}
+
+	&__errorText {
+		position: absolute;
+		font-size: 14px;
+		top: 0;
+		right: 0;
+		color: $error;
+	}
+
+	&__input {
+		width: 100%;
+		outline: none;
+
+		border: 1px solid $border;
+		background-color: transparent;
+		color: $textPrimary;
+
+		padding: 12px 16px;
+		border-radius: 6px;
+
+		&::placeholder {
+			color: $textSecondary;
+		}
+	}
+
+	&__textarea {
+		resize: none;
+		height: 130px;
+	}
+
+	&._error {
+		input,
+		textarea {
+			border: 1px solid $error;
+			color: $error;
+
+			&::placeholder {
+				color: $error;
+			}
+		}
+	}
+}
